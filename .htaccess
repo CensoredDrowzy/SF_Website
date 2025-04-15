@@ -1,0 +1,34 @@
+# x10hosting optimized configuration
+Options +FollowSymLinks -Indexes
+Require all granted
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+# URL rewriting
+RewriteEngine On
+
+
+# Set index.php as default
+DirectoryIndex index.php
+
+# Clean URL routing
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^([^/]+)/?$ $1.php [L]
+
+# Redirect root to index.php if not already
+RewriteRule ^$ index.php [L]
+
+# Only keep 404 error document
+ErrorDocument 404 /404.php
+
+# Cache control
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+</IfModule>
